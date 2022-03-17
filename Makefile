@@ -6,15 +6,9 @@ install:
 		echo "Dependecies already installed in $(VENV_DIR)."; \
 	 else \
 	 	echo "Installing in $(VENV_DIR)"; \
-<<<<<<< HEAD
 	 	python3 -m venv $(VENV_DIR); \
 	 	. $(VENV_DIR)/bin/activate && pip3 install -r requirements_dev.txt && cd activity_suggestions && touch api_key.py && echo API_KEY = \"$(API_KEY)\" > api_key.py && cp .flaskenv.example .flaskenv; \
 		cd ../react_frontend && npm install; \
-=======
-	 	sudo apt install python3.9 python3-pip -y && python3 -m venv $(VENV_DIR); \
-	 	. $(VENV_DIR)/bin/activate && pip3 install -r requirements_dev.txt && cd activity_suggestions && touch api_key.py && echo API_KEY = \"$(API_KEY)\" > api_key.py && cp .flaskenv.example .flaskenv; \
-		cd ../react_frontend && sudo apt install nodejs npm -y && npm install; \
->>>>>>> 1edf5dd6ac1baffd211ecb24133f5af7604ca6d4
 	fi
 
 start:
