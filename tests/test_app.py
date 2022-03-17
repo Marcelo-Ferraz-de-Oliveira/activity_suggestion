@@ -17,11 +17,6 @@ def client(app):
 def runner(app):
     return app.test_cli_runner()
 
-def test_home(client):
-    response = client.get("/").data.decode()
-    EXPECTED_STRING = "You need to enable JavaScript to run this app."
-    assert EXPECTED_STRING in response
-
 def test_city(client):
     response_manaus = client.post("/city", data={
         "city":"Manaus"
