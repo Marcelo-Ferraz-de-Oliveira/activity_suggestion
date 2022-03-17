@@ -26,7 +26,7 @@ def create_app():
             parser.add_argument("country", required=True)
             args = parser.parse_args()
             city = City(args["city"],args["state"],args["country"])
-            return city.__dict__, activities.get_activity_by_suggested_weather(city.weather)
+            return {"city": city.city_name, "weather": city.weather, "activities": activities.get_activity_by_suggested_weather(city.weather)}, 200
 
     class GetIndex(Resource):
         def get(self):
