@@ -13,7 +13,7 @@ class Activities(object):
     
     def _get_activities_from_web(self, url):
         activities_request = requests.get(url)
-        if not activities_request.ok: raise ValueError(f"Não foi possível obter as atividades no endereço informado (código de erro {activities_request.status_code}) {url}")
+        if not activities_request.ok: raise ValueError(f"Can't get activities form address (error code {activities_request.status_code}) {url}")
         return activities_request.json()
     
     def add_activity(self, activity):

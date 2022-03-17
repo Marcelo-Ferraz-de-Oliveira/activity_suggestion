@@ -42,8 +42,8 @@ class City(object):
         """     
         api_call = _string_api_call_coordinates(city_name, state, country, 1)
         cities_result = requests.get(api_call)
-        if not cities_result.ok: raise Exception("Erro ao chamar a API openweathermap para obter os nomes das cidades.")
-        if not cities_result.json(): raise ValueError("Cidade não encontrada.")
+        if not cities_result.ok: raise Exception("Error while calling API openweathermap API.")
+        if not cities_result.json(): raise ValueError("City not found.")
         result = cities_result.json()[0]
         coordinates = [result["lat"], result["lon"]]
         return coordinates
@@ -60,8 +60,8 @@ class City(object):
         """        
         api_call = _string_api_call_weather(self.lon, self.lat)
         weather_result = requests.get(api_call)
-        if not weather_result.ok: raise Exception("Erro ao chamar a API openweathermap para obter o clima.")
-        if not weather_result.json(): raise ValueError("Coordenadas incorretas.")
+        if not weather_result.ok: raise Exception("Error while calling API openweathermap API.")
+        if not weather_result.json(): raise ValueError("Wrong coordinates.")
         return weather_result.json()['weather'][0]["main"]
 
 def _string_api_call_coordinates(city: str, state: str = "", country: str = "", limit: int = 5) -> str:
@@ -85,7 +85,7 @@ def get_cities_list( city: str) -> list:
     """        
     api_call = _string_api_call_coordinates(city)
     cities_result = requests.get(api_call) 
-    if not cities_result.ok: raise Exception("Erro ao chamar a API openweathermap para obter os nomes das cidades.")
-    if not cities_result.json(): raise ValueError("Cidade não encontrada.")
+    if not cities_result.ok: raise Exception("Error while calling API openweathermap API.")
+    if not cities_result.json(): raise ValueError("Wrong coordinates")
     cities_info = [[ct["name"], ct["state"] if "state" in ct.keys() else "", ct["country"]] for ct in cities_result.json()]
     return cities_info
