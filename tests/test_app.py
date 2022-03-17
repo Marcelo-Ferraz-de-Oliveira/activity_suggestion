@@ -44,7 +44,7 @@ def test_city(client):
     response_wrong_city = client.post("/city", data={
         "city":"wrong city name"
     }).data.decode()
-    EXPECTED_RESULT_WRONG_CITY = "Wrong coordinates"
+    EXPECTED_RESULT_WRONG_CITY = "City not found."
     assert response_wrong_city == EXPECTED_RESULT_WRONG_CITY
 
 def test_activities(client):

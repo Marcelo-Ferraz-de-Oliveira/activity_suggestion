@@ -86,6 +86,6 @@ def get_cities_list( city: str) -> list:
     api_call = _string_api_call_coordinates(city)
     cities_result = requests.get(api_call) 
     if not cities_result.ok: raise Exception("Error while calling API openweathermap API.")
-    if not cities_result.json(): raise ValueError("Wrong coordinates")
+    if not cities_result.json(): raise ValueError("City not found.")
     cities_info = [[ct["name"], ct["state"] if "state" in ct.keys() else "", ct["country"]] for ct in cities_result.json()]
     return cities_info
