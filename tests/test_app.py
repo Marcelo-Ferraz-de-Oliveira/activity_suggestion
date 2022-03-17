@@ -17,6 +17,11 @@ def client(app):
 def runner(app):
     return app.test_cli_runner()
 
+def test_home(client):
+    response = client.get("/").data.decode()
+    EXPECTED_STRING = "You need to enable JavaScript to run this app."
+    assert EXPECTED_STRING in response
+
 def test_city(client):
     response_manaus = client.post("/city", data={
         "city":"Manaus"
@@ -42,5 +47,27 @@ def test_city(client):
     EXPECTED_RESULT_WRONG_CITY = "Wrong coordinates"
     assert response_wrong_city == EXPECTED_RESULT_WRONG_CITY
 
-def test_activities():
-    pass
+def test_activities(client):
+    #Because weather may change, this test will only verify the returned keys
+    EXPECTED_RESULT = ["city","weather","activities"]
+    
+    response_manaus = client.post("/activities", data={
+        "city":"Manaus", "state": "Amazonas", "country": "BR"
+    }).json.keys()
+    assert list(response_manaus) == EXPECTED_RESULT    
+    
+    response_belem = client.post("/activities", data={
+        "city":"Belém", "state": "Pará", "country": "BR"
+    }).json.keys()
+    assert list(response_belem) == EXPECTED_RESULT    
+    
+    response_sao_paulo = client.post("/activities", data={
+        "city":"São Paulo", "state": "São Paulo", "country": "BR"
+    }).json.keys()
+    assert list(response_sao_paulo) == EXPECTED_RESULT
+
+    EXPECTED_RESULT_WRONG_CITY = "City not found."
+    response_wrong_city = client.post("/activities", data={
+        "city":"wrong city name", "state":"wrong state name", "country": "also wrong"
+    }).data.decode()
+    assert response_wrong_city == EXPECTED_RESULT_WRONG_CITY
