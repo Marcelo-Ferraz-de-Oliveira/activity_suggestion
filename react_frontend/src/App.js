@@ -79,7 +79,7 @@ function App() {
             <Form.Label>Find and activity to do in your city!</Form.Label>
             <Form.Control
               type="text"
-              placeholder="Ex: Rio de Janeiro"
+              placeholder="Ex: Manaus"
               list="cityList"
               aria-describedby="notfound"
               onChange={(e) => {
