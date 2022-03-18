@@ -6,6 +6,7 @@ from activity_suggestions.city import City, get_cities_list
 def create_app():
     app = Flask(__name__, static_folder='../react_frontend/build', static_url_path="/")
     app.config['TRAP_HTTP_EXCEPTIONS']=True
+    app.config['PROPAGATE_EXCEPTIONS']=True
 
     api = Api(app)
 
