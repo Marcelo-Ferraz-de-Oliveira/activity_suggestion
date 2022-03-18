@@ -16,3 +16,5 @@ jobs:
     
     - name: install
       run: make install API_KEY=${{secrets.API_KEY}}
+    - name: run tests
+      run: pytest
