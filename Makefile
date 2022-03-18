@@ -1,5 +1,5 @@
 VENV_DIR=venv
-API_KEY ?= $(shell bash -c 'read -p "Openweather API Key: " pwd; echo $$pwd')
+# API_KEY ?= $(shell bash -c 'read -p "Openweather API Key: " pwd; echo $$pwd')
 
 install:
 	@if [ -d $(VENV_DIR) ]; then \

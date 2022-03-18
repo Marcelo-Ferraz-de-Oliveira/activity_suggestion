@@ -41,7 +41,7 @@ A instalação das demais dependências e do ambiente virtual é feita por um ar
 ```
 git clone https://github.com/Marcelo-Ferraz-de-Oliveira/controle_aplicacoes_financeiras.git
 cd controle-aplicacoes-financeiras
-make install
+make install API_KEY=youropenweatherkey
 ```
 
 ####Uso
