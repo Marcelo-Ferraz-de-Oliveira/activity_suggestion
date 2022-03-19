@@ -21,9 +21,13 @@ class Activities(object):
         self.activities.append(activity)
     
     def get_activity_by_suggested_weather(self, weather):
+        #Reload activities
+        self.__init__()
         return [activity for activity in self.activities if activity["suggested_weather_conditions"] == weather]
 
     def filter_activity_by_unsuggested_weather(self, weather):
+        #Reload activities
+        self.__init__()
         return [activity for activity in self.activities if weather not in activity["unsuggested_weather_conditions"]]
 
     def _get_unique_weather(self):
