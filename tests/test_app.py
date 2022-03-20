@@ -38,9 +38,39 @@ def test_city(client):
     
     response_wrong_city = client.post("/city", data={
         "city":"wrong city name"
-    }).data.decode()
-    EXPECTED_RESULT_WRONG_CITY = "City not found."
+    }).json
+    EXPECTED_RESULT_WRONG_CITY = []
     assert response_wrong_city == EXPECTED_RESULT_WRONG_CITY
+
+def test_activities_unique_values(client):
+    RESULT_UNIQUE_ACTIVITIES = ["Drizze", 
+    "Clouds", 
+    "Drizzle", 
+    "ThunderStorm", 
+    "Clear", 
+    "Snow", 
+    "Rain"]
+
+    RESULT_PARTICIPANTS_NUMBER = [1, 2, 3, 4, 5, 6, 10]
+    
+    RESULT_COSTS = ['R$100,00', 
+    'R$10,00', 
+    'R$0,00', 
+    'R$15,00', 
+    'R$10000,00', 
+    'R$50,00', 
+    'R$200,00', 
+    'R$300,00', 
+    'R$1000,00', 
+    'R$30,00']
+
+    EXPECTED_RESPONSE =  {"activities_weather": sorted(RESULT_UNIQUE_ACTIVITIES),
+            "activities_participants_number": sorted(RESULT_PARTICIPANTS_NUMBER), 
+            "activities_costs":sorted(RESULT_COSTS)}
+    
+    response = client.post("/activitiesuiniquevalues").json
+    assert EXPECTED_RESPONSE == response
+
 
 def test_activities(client):
     #Because weather may change, this test will only verify the returned keys
@@ -61,8 +91,8 @@ def test_activities(client):
     }).json.keys()
     assert list(response_sao_paulo) == EXPECTED_RESULT
 
-    EXPECTED_RESULT_WRONG_CITY = "City not found."
+    EXPECTED_RESULT_WRONG_CITY = None
     response_wrong_city = client.post("/activities", data={
         "city":"wrong city name", "state":"wrong state name", "country": "also wrong"
-    }).data.decode()
+    }).json
     assert response_wrong_city == EXPECTED_RESULT_WRONG_CITY

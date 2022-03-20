@@ -27,7 +27,15 @@ def create_app():
             parser.add_argument("country", required=True)
             args = parser.parse_args()
             city = City(args["city"],args["state"],args["country"])
-            return {"city": city.city_name, "weather": city.weather, "activities": activities.get_activity_by_suggested_weather(city.weather)}, 200
+            return {"city": city.city_name, 
+            "weather": city.weather, 
+            "activities": activities.get_activity_by_suggested_weather(city.weather)}, 200
+    
+    class GetActivitiesUniqueValues(Resource):
+        def post(self):
+            return {"activities_weather": sorted(activities.unique_weather),
+            "activities_participants_number": sorted(activities.participants_number), 
+            "activities_costs":sorted(activities.costs)}, 200
 
     class GetIndex(Resource):
         def get(self):
@@ -35,6 +43,7 @@ def create_app():
 
     api.add_resource(GetCitiesList, "/city")
     api.add_resource(GetActivities, "/activities")
+    api.add_resource(GetActivitiesUniqueValues, "/activitiesuiniquevalues")
     api.add_resource(GetIndex,"/")
 
     @app.errorhandler(Exception) 

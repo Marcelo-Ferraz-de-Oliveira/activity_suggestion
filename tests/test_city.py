@@ -28,7 +28,6 @@ def test_city_weather_function():
     assert sao_paulo.get_city_weather() in WEATHERS
 
 def test_city_get_cities_list():
-    #TODO
     list_belem = get_cities_list("Belém")
     EXPECTED_RESULT_BELEM = [['Belém', 'Pará', 'BR'], ['Bethlehem', '', 'PS'], ['Belém', '', 'PT'], ['Belém', 'Alagoas', 'BR'], ['Belém', 'Paraíba', 'BR']]
     assert list_belem == EXPECTED_RESULT_BELEM
@@ -38,7 +37,6 @@ def test_city_get_cities_list():
     list_sao_paulo = get_cities_list("São Paulo")
     EXPECTED_RESULT_SAO_PAULO = [['São Paulo', 'São Paulo', 'BR'], ['São Paulo', 'Luanda Province', 'AO'], ['São Paulo', 'Bahia', 'BR'], ['São Paulo', 'Bahia', 'BR'], ['São Paulo', 'Rio Grande do Sul', 'BR']]
     assert list_sao_paulo == EXPECTED_RESULT_SAO_PAULO
-    with pytest.raises(ValueError):
-        list_wrong_name = get_cities_list("wrong name")
+    assert [] == get_cities_list("wrong city name")
 
 

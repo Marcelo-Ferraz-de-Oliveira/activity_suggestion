@@ -20,9 +20,14 @@ def test_activities_load():
     "Snow", 
     "Rain"]
 
+    RESULT_PARTICIPANTS_NUMBER = [1, 2, 3, 4, 5, 6, 10]
+    RESULT_COSTS = ['R$100,00', 'R$10,00', 'R$0,00', 'R$15,00', 'R$10000,00', 'R$50,00', 'R$200,00', 'R$300,00', 'R$1000,00', 'R$30,00']
+
     assert type(activities.activities) == list
     assert activities.activities[0] == RESULT_ACTIVITIES
     assert sorted(activities.unique_weather) == sorted(RESULT_UNIQUE_WEATHER)
+    assert sorted(activities.participants_number) == sorted(RESULT_PARTICIPANTS_NUMBER)
+    assert sorted(activities.costs) == sorted(RESULT_COSTS)
 
 WEATHER = "Clear"
 
