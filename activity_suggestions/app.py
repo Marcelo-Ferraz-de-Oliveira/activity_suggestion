@@ -19,7 +19,7 @@ def create_app():
             args = parser.parse_args()
             return get_cities_list(args["city"])
 
-    class GetActivities(Resource):
+    class GetActivitiesByCity(Resource):
         def post(self):
             parser = reqparse.RequestParser()
             parser.add_argument("city", required=True)
@@ -30,7 +30,28 @@ def create_app():
             return {"city": city.city_name, 
             "weather": city.weather, 
             "activities": activities.get_activity_by_suggested_weather(city.weather)}, 200
-    
+
+    class GetActivitiesByWeather(Resource):
+        def post(self):
+            parser = reqparse.RequestParser()
+            parser.add_argument("weather", required=True)
+            args = parser.parse_args()
+            return {"activities": activities.get_activity_by_suggested_weather(args["weather"])}, 200
+
+    class GetActivitiesByParticipansNumber(Resource):
+        def post(self):
+            parser = reqparse.RequestParser()
+            parser.add_argument("participants_number", required=True)
+            args = parser.parse_args()
+            return {"activities": activities.get_activity_by_participants_number(args["participants_number"])}, 200
+
+    class GetActivitiesByCost(Resource):
+        def post(self):
+            parser = reqparse.RequestParser()
+            parser.add_argument("cost", required=True)
+            args = parser.parse_args()
+            return {"activities": activities.get_activity_by_cost(args["cost"])}, 200
+
     class GetActivitiesUniqueValues(Resource):
         def post(self):
             return {"activities_weather": sorted(activities.unique_weather),
@@ -41,10 +62,14 @@ def create_app():
         def get(self):
             return app.send_static_file("index.html")
 
-    api.add_resource(GetCitiesList, "/city")
-    api.add_resource(GetActivities, "/activities")
-    api.add_resource(GetActivitiesUniqueValues, "/activitiesuiniquevalues")
+    api.add_resource(GetCitiesList, "/citieslist")
+    api.add_resource(GetActivitiesUniqueValues, "/getactivitiesuiniquevalues")
+    api.add_resource(GetActivitiesByCity, "/getactivitiesbycity")
+    api.add_resource(GetActivitiesByWeather, "/getactivitiesbyweather")
+    api.add_resource(GetActivitiesByParticipansNumber, "/getactivitiesbyparticipantsnumber")
+    api.add_resource(GetActivitiesByCost, "/getactivitiesbycost")
     api.add_resource(GetIndex,"/")
+
 
     @app.errorhandler(Exception) 
     def handle_server_error(e):

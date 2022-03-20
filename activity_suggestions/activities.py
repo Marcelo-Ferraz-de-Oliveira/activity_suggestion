@@ -32,15 +32,9 @@ class Activities(object):
         self.__init__()
         return [activity for activity in self.activities if activity['requisites']['participants_number'] == number]
 
-    def get_activity_by_participants_number(self, cost):
+    def get_activity_by_cost(self, cost):
         self.__init__()
         return [activity for activity in self.activities if activity['requisites']['cost'] == cost]
-
-
-    def filter_activity_by_unsuggested_weather(self, weather):
-        #Reload activities
-        self.__init__()
-        return [activity for activity in self.activities if weather not in activity["unsuggested_weather_conditions"]]
 
     def _get_unique_weather(self):
         suggested_weather = [activity["suggested_weather_conditions"] for activity in self.activities]
