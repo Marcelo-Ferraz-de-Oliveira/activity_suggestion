@@ -43,7 +43,8 @@ def create_app():
             parser = reqparse.RequestParser()
             parser.add_argument("participants_number", required=True)
             args = parser.parse_args()
-            return {"activities": activities.get_activity_by_participants_number(args["participants_number"])}, 200
+            print(activities.get_activity_by_participants_number(args["participants_number"]))
+            return {"activities": activities.get_activity_by_participants_number(int(args["participants_number"]))}, 200
 
     class GetActivitiesByCost(Resource):
         def post(self):
