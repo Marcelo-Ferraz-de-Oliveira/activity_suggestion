@@ -32,7 +32,7 @@ docker run --rm -p 3000:3000 activity_suggestions
 
 ### Executar em modo de desenvolvimento
 
-####Pré requisitos
+#### Pré requisitos
 
 A aplicação utiliza um backend python/flask com frontend react
 
@@ -50,7 +50,7 @@ git
 
 Também é necessário ter uma chave da API do OpenWeather. Você pode criar uma no endereço: https://home.openweathermap.org/
 
-####Instalação de dependências
+#### Instalação de dependências
 
 A instalação das demais dependências e do ambiente virtual é feita por um arquivo Makefile. Para obter o código fonte e fazer a configuração inicial execute:
 
@@ -60,7 +60,7 @@ cd controle-aplicacoes-financeiras
 make install API_KEY=youropenweatherkey
 ```
 
-####Uso
+#### Uso
 
 Para iniciar os servidores de desenvolvimento (portas 3000 e 5000) execute `make start`
 
