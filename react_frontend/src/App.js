@@ -1,34 +1,53 @@
 import "./App.css";
-import { Form, Card, Container } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Form, Container } from "react-bootstrap";
 import ModalError from "./components/ModalError";
+import PopulatedList from "./components/PopulatedList";
+import CityLabel from "./components/CityLable";
+import CityResult from "./components/CityResult";
+import Activities from "./components/Activities";
 
 function App() {
   const [activities, setActivities] = useState([]);
   const [suggestions, setSuggestions] = useState([]);
   const [error, setError] = useState("");
   const [notFound, setNotFound] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [weatherList, setWeatherList] = useState([]);
+  const [particpantsNumberList, setParticipantsNumberList] = useState([]);
+  const [costsList, setCostsList] = useState([]);
 
-  const getSuggestions = async (e) => {
-    const values = e.target.value.split(/,/);
+  useEffect(() => {
+    //Fetch Tasks
+    const fetchActivitiesUniqueValues = async () => {
+      const res = await fetch("/getactivitiesuiniquevalues", {
+        method: "POST",
+      });
+      const data = await res.json();
+      setWeatherList(data.activities_weather);
+      setParticipantsNumberList(data.activities_participants_number);
+      setCostsList(data.activities_costs);
+    };
+    fetchActivitiesUniqueValues();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const getSuggestions = async (str) => {
+    if (!str || str.length < 3) return true;
+    const values = str.split(/,/);
     let data = new FormData();
     data.append("city", values[0]);
-
-    const res = await fetch("/city", {
+    const res = await fetch("/citieslist", {
       method: "POST",
       body: data,
     });
-
     if (res.status === 200) {
       const suggestionsJson = await res.json();
       setSuggestions(suggestionsJson);
-      return true;
-    }
-    if (res.status === 404) {
-      const resNotFound = await res.text();
-      setSuggestions([]);
-      setNotFound(resNotFound);
+      suggestionsJson.length === 0
+        ? setNotFound("City not found")
+        : setNotFound("");
       return true;
     }
     const error = await res.text();
@@ -37,31 +56,46 @@ function App() {
     return true;
   };
 
-  const onSubmit = async (e) => {
-    e.preventDefault();
-    setNotFound("");
-    const city = e.target.value;
-    if (!city || city.length < 3) return true;
+  const onSelectCity = (str) => {
+    const city = str;
     const cityValues = city.split(/,/);
-    if (cityValues.length < 3) {
-      getSuggestions(e);
-      return true;
-    }
     setSuggestions([]);
+    setLoading(true);
     let data = new FormData();
     data.append("city", cityValues[0]);
     data.append("state", cityValues[1]);
     data.append("country", cityValues[2]);
 
-    const resActivities = await fetch("/activities", {
+    fetchActivities("/getactivitiesbycity", data);
+  };
+
+  const onSelectWeather = (str) => {
+    let data = new FormData();
+    data.append("weather", str);
+    fetchActivities("/getactivitiesbyweather", data);
+  };
+
+  const onSelectParticipantsNumber = (str) => {
+    let data = new FormData();
+    data.append("participants_number", parseInt(str));
+    fetchActivities("/getactivitiesbyparticipantsnumber", data);
+  };
+
+  const onSelectCost = (str) => {
+    let data = new FormData();
+    data.append("cost", str);
+    fetchActivities("/getactivitiesbycost", data);
+  };
+
+  const fetchActivities = async (resource, data) => {
+    setLoading(true);
+    const resActivities = await fetch(resource, {
       method: "POST",
       body: data,
     });
-
+    setLoading(false);
     if (resActivities.status === 200) {
-      e.target.value = "";
       const jsonActivities = await resActivities.json();
-      console.log(jsonActivities);
       setActivities(jsonActivities);
       return true;
     }
@@ -72,77 +106,41 @@ function App() {
   };
 
   return (
-    <div classname="pb-5">
+    <div className="pb-5">
       <section className=" text-center m-2">
         <Container className="p-3 bg-light text-dark d-sm-flex justify-content-center align-items-center border rounded">
-          <Form onSubmit={(e) => e.preventDefault()}>
-            <Form.Label>Find and activity to do in your city!</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Ex: Manaus"
-              list="cityList"
-              aria-describedby="notfound"
-              onChange={(e) => {
-                onSubmit(e);
-              }}
+          <Form>
+            <PopulatedList
+              caption="Weather"
+              optionList={weatherList}
+              onChange={onSelectWeather}
             />
-            <Form.Text id="notfound">{notFound ? notFound : " "}</Form.Text>
-            <datalist id="cityList">
-              {suggestions.map((response) => {
-                return (
-                  <option
-                    key={`${Math.random()}`}
-                    value={`${response[0]}, ${response[1]}, ${response[2]}`}
-                  ></option>
-                );
-              })}
-            </datalist>
+            <PopulatedList
+              caption="Number of participants"
+              optionList={particpantsNumberList}
+              onChange={onSelectParticipantsNumber}
+            />
+            <PopulatedList
+              caption="Cost"
+              optionList={costsList}
+              onChange={onSelectCost}
+            />
+            <CityLabel
+              caption="City name"
+              onChange={getSuggestions}
+              notFound={notFound}
+              loading={loading}
+            />
+            <CityResult suggestions={suggestions} onSelectCity={onSelectCity} />
           </Form>
         </Container>
       </section>
-      <section className="text-center m-2">
-        <Container className="p-3 bg-light text-dark d-sm-flex justify-content-center align-items-center border rounded">
-          {activities.length !== 0 ? (
-            <Container className="row">
-              <Container fluid="sm">
-                <h6>
-                  At {activities["city"]} {activities["state"]}{" "}
-                  {activities["country"]} the weather is:{" "}
-                  {activities["weather"]}!
-                </h6>
-                <p>Founded {activities["activities"].length} activities:</p>
-              </Container>
-              <Container fluid="sm">
-                {activities["activities"].map((activity) => {
-                  return (
-                    <Container>
-                      <Card>
-                        <h6>Activity: {activity.activity_title}</h6>
-                        <h6>
-                          Suggested Location: {activity.suggested_location}
-                        </h6>
-                        <h6>
-                          Cost:{" "}
-                          {activity.requisites.cost
-                            ? activity.requisites.cost
-                            : "Free"}
-                        </h6>
-                        <h6>
-                          Number of participants:{" "}
-                          {activity.requisites.participants_number}
-                        </h6>
-                      </Card>
-                    </Container>
-                  );
-                })}
-              </Container>
-            </Container>
-          ) : (
-            " "
-          )}
-        </Container>
-        <ModalError error={error} onHide={() => setError("")} />
-      </section>
+      {activities.length !== 0 || loading ? (
+        <Activities loading={loading} activities={activities} />
+      ) : (
+        " "
+      )}
+      <ModalError error={error} onHide={() => setError("")} />
     </div>
   );
 }
