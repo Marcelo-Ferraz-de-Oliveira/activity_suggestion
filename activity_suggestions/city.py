@@ -1,6 +1,5 @@
 import requests
 from activity_suggestions.api_key import API_KEY
-from time import sleep
 
 class City(object):
     """Class to concentrate city information, coordinates and weather.
@@ -84,10 +83,8 @@ def get_cities_list( city: str) -> list:
     Returns:
         list: Return a list with 1 to 5 lists with city name, state and country.
     """
-    # sleep(1)        
     api_call = _string_api_call_coordinates(city)
     cities_result = requests.get(api_call) 
     if not cities_result.ok: raise Exception("Error while calling API openweathermap API.")
-    #if not cities_result.json(): raise ValueError("City not found.")
     cities_info = [[ct["name"], ct["state"] if "state" in ct.keys() else "", ct["country"]] for ct in cities_result.json()]
     return cities_info
