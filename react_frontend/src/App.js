@@ -109,7 +109,7 @@ function App() {
     <div className="pb-5">
       <section className=" text-center m-2">
         <Container className="p-3 bg-light text-dark d-sm-flex justify-content-center align-items-center border rounded">
-          <Form>
+          <Form onSubmit={(e) => e.preventDefault()}>
             <PopulatedList
               caption="Weather"
               optionList={weatherList}

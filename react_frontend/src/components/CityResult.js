@@ -1,23 +1,23 @@
 import React from "react";
-import {Container } from "react-bootstrap";
-
+import { ListGroup } from "react-bootstrap";
 
 const CityResult = ({ suggestions, onSelectCity }) => {
   return (
-    <Container id="cityList">
+    <ListGroup id="cityList">
       {suggestions.map((response) => {
         return (
-          <p
+          <ListGroup.Item
+            action
             key={`${Math.random()}`}
             onClick={() => {
               onSelectCity(`${response[0]}, ${response[1]}, ${response[2]}`);
             }}
           >
             {`${response[0]}, ${response[1]}, ${response[2]}`}
-          </p>
+          </ListGroup.Item>
         );
       })}
-    </Container>
+    </ListGroup>
   );
 };
 
