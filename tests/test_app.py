@@ -113,7 +113,7 @@ def test_activities_by_participants_number(client):
         for activity in activities["activities"]:
             assert activity["requisites"]["participants_number"] == participants_number
     
-    assert {"activities": []} == client.post("/getactivitiesbyparticipantsnumber", data={"participants_number":"wrong_participants_number" }).json
+    assert {"activities": []} == client.post("/getactivitiesbyparticipantsnumber", data={"participants_number":99999999999999999999999 }).json
 
 def test_activities_by_cost(client):
     for cost in COSTS:
