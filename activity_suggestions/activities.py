@@ -1,16 +1,12 @@
 import requests
 import json
 
-class Activities(object):
-    """_summary_
-
-    Args:
-        object (_type_): _description_
-    """    
+class Activities(object):   
     def __init__(self):
         URL_JSON_ACTIVITIES = "https://raw.githubusercontent.com/probono-digital/DesafioTecnico/main/MOCK_DATA.json"
         self.activities = self._get_activities_from_web(URL_JSON_ACTIVITIES)
-        self.unique_weather, self.participants_number, self.costs = self._get_unique_weather()
+        #Get unique values to populate the frontend
+        self.unique_weather, self.participants_number, self.costs = self._get_unique_values()
     
     def _get_activities_from_web(self, url):
         activities_request = requests.get(url)
@@ -24,19 +20,15 @@ class Activities(object):
         self.activities.append(activity)
     
     def get_activity_by_suggested_weather(self, weather):
-        #Reload activities
-        self.__init__()
         return [activity for activity in self.activities if activity["suggested_weather_conditions"] == weather]
 
     def get_activity_by_participants_number(self, number):
-        self.__init__()
         return [activity for activity in self.activities if activity['requisites']['participants_number'] == number]
 
     def get_activity_by_cost(self, cost):
-        self.__init__()
         return [activity for activity in self.activities if activity['requisites']['cost'] == cost]
 
-    def _get_unique_weather(self):
+    def _get_unique_values(self):
         suggested_weather = [activity["suggested_weather_conditions"] for activity in self.activities]
         participants_numbers = [activity['requisites']['participants_number'] for activity in self.activities]
         costs = [activity['requisites']['cost'] for activity in self.activities]
